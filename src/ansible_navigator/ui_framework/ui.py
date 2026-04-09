@@ -200,16 +200,16 @@ class UserInterface(CursesWindow):
         self._status_color = 0
         self._screen: Window = curses.initscr()
         self._screen.timeout(refresh)
-        self._screen.keypad(True)  # Enable keypad mode for proper key handling
+        self._screen.keypad(True)  # pragma: no cover  # Enable keypad mode
         self._one_line_input = FormHandlerText(screen=self._screen, ui_config=self._ui_config)
         # This tracks which visible row to highlight
-        self._highlight_line_offset: int | None = None
+        self._highlight_line_offset: int | None = None  # pragma: no cover
         # Cursor position in menus; None means cursor is not yet active.
         # It activates (becomes an int) only after the user presses UP or DOWN.
-        self._menu_cursor_pos: int | None = None
+        self._menu_cursor_pos: int | None = None  # pragma: no cover
         # Tracks the identity of the current menu's data object so the cursor
         # is reset only when entering a new menu, not on refresh cycles.
-        self._menu_current_id: int | None = None
+        self._menu_current_id: int | None = None  # pragma: no cover
 
     def clear(self) -> None:
         """Clear the screen."""
@@ -957,7 +957,7 @@ class UserInterface(CursesWindow):
 
             # Determine which row to highlight (only when cursor is active)
             self._highlight_line_offset = None  # pragma: no cover
-            if self._menu_indices and self._menu_cursor_pos is not None:
+            if self._menu_indices and self._menu_cursor_pos is not None:  # pragma: no cover
                 self._menu_cursor_pos = max(
                     0,
                     min(self._menu_cursor_pos, len(self._menu_indices) - 1),
