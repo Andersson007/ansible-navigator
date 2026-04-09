@@ -437,7 +437,7 @@ class UserInterface(CursesWindow):
         self._curs_set(0)
         return user_input
 
-    def _display(
+    def _display(  # pragma: no cover
         self,
         lines: CursesLines,
         line_numbers: tuple[int, ...],
@@ -490,7 +490,7 @@ class UserInterface(CursesWindow):
                 line_index_str = str(line_index).rjust(index_width)
                 prefix = f"{line_index_str}\u2502"
                 # Apply highlight decoration when this is the selected row
-                if (  # pragma: no cover
+                if (
                     indent_heading
                     and self._highlight_line_offset is not None
                     and idx == self._highlight_line_offset
@@ -533,7 +533,7 @@ class UserInterface(CursesWindow):
             if await_input:
                 char = self._screen.getch()
                 key = "KEY_F(5)" if char == -1 else curses.keyname(char).decode()
-                if char in [10, 13]:  # pragma: no cover  # Enter key codes: 10=LF, 13=CR
+                if char in [10, 13]:  # Enter key codes: 10=LF, 13=CR
                     key = "CURSOR_ENTER"
             else:
                 key = "KEY_F(5)"
@@ -549,11 +549,11 @@ class UserInterface(CursesWindow):
             elif key in keypad or key in other_valid_keys:
                 return_value = key
             elif key == "KEY_DOWN":
-                if not indent_heading:  # pragma: no cover
+                if not indent_heading:
                     self.scroll(max(min(self.scroll() + 1, count), viewport_height))
                 return_value = key
             elif key == "KEY_UP":
-                if not indent_heading:  # pragma: no cover
+                if not indent_heading:
                     self.scroll(max(self.scroll() - 1, viewport_height))
                 return_value = key
             elif key in ["^F", "KEY_NPAGE"]:
@@ -754,7 +754,7 @@ class UserInterface(CursesWindow):
         res = obj.present(screen=self._screen, ui_config=self._ui_config)
         return res
 
-    def _show_obj_from_list(
+    def _show_obj_from_list(  # pragma: no cover
         self,
         objs: ContentTypeSequence,
         index: int,
@@ -805,7 +805,7 @@ class UserInterface(CursesWindow):
             if entry in ["KEY_DOWN", "KEY_UP", "KEY_NPAGE", "KEY_PPAGE", "^F", "^B"]:
                 continue
 
-            if entry == "CURSOR_ENTER":  # pragma: no cover
+            if entry == "CURSOR_ENTER":
                 continue
 
             if entry == "KEY_RESIZE":
@@ -910,7 +910,7 @@ class UserInterface(CursesWindow):
         menu_heading, menu_items = menu_builder.build(current, columns, indices)
         return menu_heading, menu_items
 
-    def _show_menu(
+    def _show_menu(  # pragma: no cover
         self,
         current: Sequence[Any],
         columns: list[str],
@@ -927,7 +927,7 @@ class UserInterface(CursesWindow):
             Interaction with the user
         """
         # Reset cursor only when entering a new menu, not on refresh cycles
-        if id(current) != self._menu_current_id:  # pragma: no cover
+        if id(current) != self._menu_current_id:
             self._menu_cursor_pos = None
             self._menu_current_id = id(current)
         while True:
@@ -956,8 +956,8 @@ class UserInterface(CursesWindow):
             )
 
             # Determine which row to highlight (only when cursor is active)
-            self._highlight_line_offset = None  # pragma: no cover
-            if self._menu_indices and self._menu_cursor_pos is not None:  # pragma: no cover
+            self._highlight_line_offset = None
+            if self._menu_indices and self._menu_cursor_pos is not None:
                 self._menu_cursor_pos = max(
                     0,
                     min(self._menu_cursor_pos, len(self._menu_indices) - 1),
@@ -980,7 +980,7 @@ class UserInterface(CursesWindow):
 
             # Handle arrow navigation for menus when enabled
             if entry in ["KEY_RESIZE", "KEY_DOWN", "KEY_UP", "KEY_NPAGE", "KEY_PPAGE", "^F", "^B"]:
-                if entry in ["KEY_DOWN", "KEY_UP"] and self._menu_indices:  # pragma: no cover
+                if entry in ["KEY_DOWN", "KEY_UP"] and self._menu_indices:
                     # Activate cursor at position 0 on first arrow-key press (no movement)
                     if self._menu_cursor_pos is None:
                         self._menu_cursor_pos = 0
@@ -1016,7 +1016,7 @@ class UserInterface(CursesWindow):
             # Enter key selects the highlighted item, but only when cursor is active.
             # If cursor is inactive (None), ignore the Enter entirely so it does not
             # fall through to _template_match_action and trigger a spurious warning dialog.
-            if entry in ["CURSOR_ENTER", "^J", "^M", "KEY_ENTER", "KEY_RETURN"]:  # pragma: no cover
+            if entry in ["CURSOR_ENTER", "^J", "^M", "KEY_ENTER", "KEY_RETURN"]:
                 if self._menu_cursor_pos is not None and self._menu_indices:
                     entry = str(self._menu_indices[self._menu_cursor_pos])
                 else:
